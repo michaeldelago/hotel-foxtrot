@@ -2,6 +2,7 @@
 dbmate = "latest"
 "pipx:squawk-cli" = "latest"
 helmfile = "latest"
+"cargo:lazyjj" = "latest"
 
 [env]
 DATABASE_URL = "postgres://hotel-foxtrot:foo-password@localhost/hotel-foxtrot?sslmode=disable"
