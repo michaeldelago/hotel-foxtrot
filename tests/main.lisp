@@ -5,6 +5,3 @@
 ;; NOTE: To run this test file, execute `(asdf:test-system :hotel-foxtrot)' in your Lisp.
 
 (def-suite* main)
-
-(test default
-  (is (= 1 1)))
