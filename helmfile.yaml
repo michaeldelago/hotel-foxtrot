@@ -1,0 +1,12 @@
+# This file is used for testing
+
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+---
+releases:
+  - name: valkey
+    chart: bitnami/valkey
+    namespace: dev
+    version: 1.0.2

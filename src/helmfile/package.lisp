@@ -1,0 +1,22 @@
+(uiop:define-package hotel-foxtrot.helmfile
+  (:use #:cl))
+(in-package #:hotel-foxtrot.helmfile)
+
+(uiop:add-package-local-nickname '#:jzon '#:com.inuoe.jzon)
+
+(define-condition run-helmfile-error (error)
+  ((status-code :initarg :status-code :initform 0 :accessor status-code)
+   (error-output :initarg :error-output :initform "" :accessor error-output)
+   (output :initarg :output :initform "" :accessor output)
+   (operation :initarg :operation :initform "" :accessor operation)
+   (selector :initarg :selector :initform "" :accessor selector)
+   (environment :initarg :environment :initform "" :accessor environment))
+  (:report (lambda (condition stream)
+             (declare (ignorable stream))
+             (log4cl-extras/context:with-fields (:status-code (status-code condition)
+                                                 :error-output (error-output condition)
+                                                 :output (output condition)
+                                                 :operation (operation condition)
+                                                 :selector (selector condition)
+                                                 :environment (environment condition))
+               (log:error "error running helmfile")))))

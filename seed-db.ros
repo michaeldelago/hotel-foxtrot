@@ -1,0 +1,40 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '(cl-yesql postmodern cl-yesql/postmodern log4cl log4cl-extras) :silent t)
+  )
+
+(defpackage :hotel-foxtrot.script.seed-db
+  (:use :cl))
+(in-package :hotel-foxtrot.script.seed-db)
+
+(overlord:set-package-base "" :hotel-foxtrot)
+(yesql:import queries
+  :from "sql/queries.sql"
+  :as :cl-yesql/postmodern
+  :binding :all-functions)
+
+(log4cl-extras/config:setup
+ '(:level :debug
+   :appenders ((this-console :layout :json))))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+
+
+  (postmodern:with-connection '("hotel-foxtrot" "hotel-foxtrot" "foo-password" "localhost" :pooled-p t :port 5432)
+    (dolist (row '(("dev" "my-service" "foo diff")
+                   ("prod" "my-service" "prod my-service")
+                   ("foo" "foo-proxy" "diff for foo proxy in foo")
+                   ("dev" "foo-proxy" "diff for foo proxy in dev")
+                   ("prod" "foo-proxy" "diff for foo proxy in prod")))
+      (destructuring-bind (namespace service diff-content) row
+        (log4cl-extras/context:with-fields (:service service :namespace namespace)
+          (log:info "seeding service release"))
+        (insert-new-service namespace service diff-content)))))
+
+;;; vim: set ft=lisp lisp:
