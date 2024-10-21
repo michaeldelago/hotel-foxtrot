@@ -2,6 +2,9 @@
   (:use #:cl))
 (in-package #:hotel-foxtrot)
 
+;;;  TODO: Write http service driver code
+;;;  TODO: Write git integration
+
 ;; (yesql:import helmfile-db
 ;;   :from "sql/queries.sql"
 ;;   :as :cl-yesql/postmodern
